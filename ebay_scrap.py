@@ -9,9 +9,9 @@ import pandas as pd
 # open chrome
 driver = webdriver.Chrome()
 
+
 # main
 def main():
-
     url = "https://www.ebay.com/"
 
     print("Start")
@@ -30,7 +30,6 @@ def main():
     try:
         for product in product_list:
             search(product)
-
 
     except FileNotFoundError:
         print("File not found while searching for product")
@@ -114,12 +113,6 @@ def search(product_name):
         # Checking for a match.
         check_match(first_product_name)
 
-
-
-
-
-
-
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         # Handle error gracefully, for example, logging or raising exception
@@ -133,9 +126,9 @@ def check_match(match_woord):
     time.sleep(2)
 
     wait = WebDriverWait(driver, 10)
-    #results = wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, 's-item__title')))
-    results = wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, 's-item__title')))
 
+    # results = wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, 's-item__title')))
+    results = wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, 's-item__title')))
 
     # Extracting the first word from the title to check for a match.
     if len(results) > 1:  # Check if the results page is not empty.
@@ -163,9 +156,6 @@ def check_match(match_woord):
 
 def scrap_data():
     scrap_data()
-
-
-
 
 
 if __name__ == '__main__':
