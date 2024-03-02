@@ -154,8 +154,8 @@ def check_match(match_woord):
         return False
 
 
-def scrap_data():
-    scrap_data()
+#def scrap_data():
+    #scrap_data()
 
 
 if __name__ == '__main__':
