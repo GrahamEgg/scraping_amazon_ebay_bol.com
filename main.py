@@ -1,12 +1,19 @@
 import tkinter as tk
 from tkinter import filedialog
+from PIL import ImageTk, Image
 import subprocess
+
+global selected_file_path
+global selected_option
+global label_selected_file
+
 
 def select_excel_file():
     global selected_file_path
     selected_file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
     if selected_file_path:
         label_selected_file.config(text=f"Selected file: {selected_file_path}")
+
 
 def start_scraping():
     global selected_file_path
@@ -33,6 +40,7 @@ def start_scraping():
         else:
             print("No file selected.")
 
+
 def interface():
     global selected_file_path
     global selected_option
@@ -42,7 +50,7 @@ def interface():
     root.title("Scraper interface")
     # Calculate the position to center the window
     window_width = 800
-    window_height = 700
+    window_height = 500
 
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
@@ -53,8 +61,19 @@ def interface():
 
     welkom_label = tk.Label(root, text="Welcome to the BTMarkt Scraper.", font=("Arial", 16))
     welkom_label.pack(pady=20)
+    try:
+        logo_path = "./btpic.jpg"
+        logo = Image.open(logo_path)
+        logo = logo.resize((200, 100))  # Resize the image
+        logo = ImageTk.PhotoImage(logo)
+        logo_label = tk.Label(root, image=logo)
+        logo_label.image = logo  # Keep a reference to avoid garbage collection
+        logo_label.pack()
 
-    what_to_scrap = tk.Label(root, text="Select what website you want to scrap", font=("Arial", 10))
+    except tk.TclError as e:
+        print("Error:", e)
+
+    what_to_scrap = tk.Label(root, text="Select what website you want to scrape", font=("Arial", 10))
     what_to_scrap.pack()
 
     options = ["Ebay", "Bol", "Amazon"]
@@ -75,6 +94,7 @@ def interface():
     start_button.pack(pady=20)
 
     root.mainloop()
+
 
 if __name__ == '__main__':
     interface()
