@@ -1,10 +1,13 @@
 import time
+
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.keys import Keys
 import pandas as pd
+from bs4 import BeautifulSoup
 
 # open chrome
 driver = webdriver.Chrome()
@@ -48,10 +51,7 @@ def clear_cooks():
 
     # Perform a search test to ensure that the cookies are successfully retrieved.
     try:
-        input_search = driver.find_element(By.XPATH, "/html/body/div[3]"
-                                                     "/div/header/table/tbody"
-                                                     "/tr/td[5]/form/table/tbody"
-                                                     "/tr/td[1]/div[1]/div/input[1]")
+        input_search = driver.find_element(By.ID, "gh-ac")
 
         input_search.clear()
         input_search.send_keys("test")
@@ -59,7 +59,7 @@ def clear_cooks():
 
     except Exception as ew:
         print(f"An error occurred: {str(ew)}")
-        driver.quit()
+        #driver.quit()
 
     print("Completed the test search.")
 
@@ -101,6 +101,7 @@ def search(product_name):
     # Extracting the first word from the product name to verify search results.
     first_product_name = product_name.split(" ")[0]
 
+
     # Selecting the search bar and inputting the product name.
     try:
         input_search = driver.find_element(By.ID, "gh-ac")
@@ -125,33 +126,40 @@ def check_match(match_woord):
 
     time.sleep(2)
 
-    wait = WebDriverWait(driver, 10)
+    #wait = WebDriverWait(driver, 10)
+    url = driver.current_url
+    pagina = requests.get(url)
+    pagina.raise_for_status()
 
+
+    soup = BeautifulSoup(pagina.content, 'html.parser')
+    result = soup.find_all(class_='s-item s-item__pl-on-bottom')
+    print(result)
     # results = wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, 's-item__title')))
-    results = wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, 's-item__title')))
+    #results = wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, 's-item__title')))
 
     # Extracting the first word from the title to check for a match.
-    if len(results) > 1:  # Check if the results page is not empty.
-        first_result = results[5]
-        title_text = first_result.text.strip()
-        print(title_text)
-        first_title_word = title_text.split(" ")[0]
+   # if len(results) > 1:  # Check if the results page is not empty.
+   #     first_result = results[5]
+   #     title_text = first_result.text.strip()
+   #     print(title_text)
+   #     first_title_word = title_text.split(" ")[0]
 
-    else:
-        print("No product search results found.")
-        first_title_word = "No value"
+   # else:
+   #     print("No product search results found.")
+   #     first_title_word = "No value"
 
-    print("First word from product name search:", match_woord)
-    print("First word extracted from search result title:", first_title_word)
+    #print("First word from product name search:", match_woord)
+   # print("First word extracted from search result title:", first_title_word)
 
-    is_match = (match_woord.upper() == first_title_word.upper())
+   # is_match = (match_woord.upper() == first_title_word.upper())
 
-    if is_match is True:
-        print("Match found.")
-        return True
-    else:
-        print("No match found.")
-        return False
+   # if is_match is True:
+   #     print("Match found.")
+   #     return True
+   # else:
+   #     print("No match found.")
+    #    return False
 
 
 #def scrap_data():
